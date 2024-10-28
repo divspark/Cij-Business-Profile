@@ -20,7 +20,7 @@ const authMiddleware = async (req, res, next) => {
     }
 
     // Attach company information to the request object
-    req.company = { id: company._id, PrimaryEmail: company.PrimaryEmail };
+    req.company = { id: company._id, Email: company.Email };
     
     next(); // Call the next middleware or route handler
   } catch (error) {

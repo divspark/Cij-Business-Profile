@@ -16,7 +16,7 @@ const signup = async (req, res) => {
     "CompanyName",
     "ContactPersonName",
     "PrimaryMobileNumber",
-    "PrimaryEmail",
+    "Email",
     "Pincode",
     "District",
     "Country",
@@ -28,56 +28,79 @@ const signup = async (req, res) => {
     "CEOName",
     "GSTRegistrationDate",
     "OwnershipType",
-    "password"
+    "password",
   ];
 
   // Check for missing required fields
-  const missingFields = requiredFields.filter(field => !req.body[field]);
+  const missingFields = requiredFields.filter((field) => !req.body[field]);
   if (missingFields.length > 0) {
-    return res.status(400).json({ success: false, message: `Please fill all required details: ${missingFields.join(', ')}` });
+    return res
+      .status(400)
+      .json({
+        success: false,
+        message: `Please fill all required details: ${missingFields.join(
+          ", "
+        )}`,
+      });
   }
 
   // Hash the password
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
-  
+
   // Create the company with hashed password
-  const company = await Company.create({ ...req.body, password: hashedPassword });
+  const company = await Company.create({
+    ...req.body,
+    password: hashedPassword,
+  });
 
   // Generate a token
-  const token = generateToken(company._id, company.PrimaryEmail);
+  const token = generateToken(company._id, company.Email);
 
-  res.status(201).json({ success: true, message: "Company registered successfully.", token });
+  res
+    .status(201)
+    .json({
+      success: true,
+      message: "Company registered successfully.",
+      token,
+    });
 };
 
 // Login API
 const login = async (req, res) => {
   try {
-    const { PrimaryEmail, password } = req.body;
+    const { Email, password } = req.body;
 
-    if (!PrimaryEmail || !password) {
-      return res.status(400).json({ success: false, message: "Email and password are required." });
+    if (!Email || !password) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Email and password are required." });
     }
 
-    const company = await Company.findOne({ PrimaryEmail });
+    const company = await Company.findOne({ Email });
     if (!company) {
-      return res.status(401).json({ success: false, message: "Invalid email or password." });
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid email or password." });
     }
 
     const isPasswordMatched = await bcrypt.compare(password, company.password);
     if (!isPasswordMatched) {
-      return res.status(401).json({ success: false, message: "Invalid email or password." });
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid email or password." });
     }
 
     // Generate a token
-    const token = generateToken(company._id, company.PrimaryEmail);
+    const token = generateToken(company._id, company.Email);
 
-    res.status(200).json({ success: true, message: "Login successful.", token });
+    res
+      .status(200)
+      .json({ success: true, message: "Login successful.", token });
   } catch (error) {
-    console.error('Login error:', error); // Log the error for debugging
+    console.error("Login error:", error); // Log the error for debugging
     res.status(500).json({ success: false, message: "Server error." });
   }
 };
-
 
 // Show Profile API
 const showProfile = async (req, res) => {
@@ -85,7 +108,9 @@ const showProfile = async (req, res) => {
 
   const company = await Company.findById(companyId);
   if (!company) {
-    return res.status(404).json({ success: false, message: "Company not found." });
+    return res
+      .status(404)
+      .json({ success: false, message: "Company not found." });
   }
 
   res.status(200).json({ success: true, company });
@@ -101,7 +126,9 @@ const updateProfile = async (req, res) => {
   });
 
   if (!updatedCompany) {
-    return res.status(404).json({ success: false, message: "Company not found." });
+    return res
+      .status(404)
+      .json({ success: false, message: "Company not found." });
   }
 
   res.status(200).json({ success: true, company: updatedCompany });
@@ -113,49 +140,67 @@ const deleteProfile = async (req, res) => {
 
   const deletedCompany = await Company.findByIdAndDelete(companyId);
   if (!deletedCompany) {
-    return res.status(404).json({ success: false, message: "Company not found." });
+    return res
+      .status(404)
+      .json({ success: false, message: "Company not found." });
   }
 
-  res.status(200).json({ success: true, message: "Profile deleted successfully." });
+  res
+    .status(200)
+    .json({ success: true, message: "Profile deleted successfully." });
 };
 
 // Forgot Password API
 const forgotPassword = async (req, res) => {
-  const { PrimaryEmail } = req.body;
+  const { Email } = req.body;
 
-  if (!PrimaryEmail) {
-    return res.status(400).json({ success: false, message: "Email is required." });
+  if (!Email) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Email is required." });
   }
 
-  const company = await Company.findOne({ PrimaryEmail });
+  const company = await Company.findOne({ Email });
   if (!company) {
-    return res.status(404).json({ success: false, message: "Company not found." });
+    return res
+      .status(404)
+      .json({ success: false, message: "Company not found." });
   }
 
   // Generate reset token
   const resetToken = crypto.randomBytes(20).toString("hex");
 
   // Hash and save the reset token in the database
-  company.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+  company.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
   company.resetPasswordExpire = Date.now() + 30 * 60 * 1000; // Token valid for 30 minutes
   await company.save();
 
   // Send email
-  const resetUrl = `${req.protocol}://${req.get("host")}/api/company/reset-password/${resetToken}`;
+  const resetUrl = `${req.protocol}://${req.get(
+    "host"
+  )}/api/company/reset-password/${resetToken}`;
   const message = `You are receiving this email because you (or someone else) has requested to reset your password. Please make a PUT request to:\n\n ${resetUrl}`;
-  
+
   await sendEmail({
-    email: company.PrimaryEmail,
+    email: company.Email,
     subject: "Password Reset Request",
     message,
   });
 
-  res.status(200).json({ success: true, message: "Email sent for password reset." });
+  res
+    .status(200)
+    .json({ success: true, message: "Email sent for password reset." });
 };
 
 // Reset Password API
 const resetPassword = async (req, res) => {
-  const resetPasswordToken = crypto.createHash("sha256").update(req.params.token).digest("hex");
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
 
   const company = await Company.findOne({
     resetPasswordToken,
@@ -163,13 +208,17 @@ const resetPassword = async (req, res) => {
   });
 
   if (!company) {
-    return res.status(400).json({ success: false, message: "Invalid or expired reset token." });
+    return res
+      .status(400)
+      .json({ success: false, message: "Invalid or expired reset token." });
   }
 
   const { password, confirmPassword } = req.body;
 
   if (password !== confirmPassword) {
-    return res.status(400).json({ success: false, message: "Passwords do not match." });
+    return res
+      .status(400)
+      .json({ success: false, message: "Passwords do not match." });
   }
 
   // Set new password
@@ -178,7 +227,9 @@ const resetPassword = async (req, res) => {
   company.resetPasswordExpire = undefined;
   await company.save();
 
-  res.status(200).json({ success: true, message: "Password reset successfully." });
+  res
+    .status(200)
+    .json({ success: true, message: "Password reset successfully." });
 };
 
 // Update Password API
@@ -187,23 +238,34 @@ const updatePassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
 
   if (!oldPassword || !newPassword) {
-    return res.status(400).json({ success: false, message: "Old password and new password are required." });
+    return res
+      .status(400)
+      .json({
+        success: false,
+        message: "Old password and new password are required.",
+      });
   }
 
   const company = await Company.findById(companyId);
   if (!company) {
-    return res.status(404).json({ success: false, message: "Company not found." });
+    return res
+      .status(404)
+      .json({ success: false, message: "Company not found." });
   }
 
   const isPasswordMatched = await bcrypt.compare(oldPassword, company.password);
   if (!isPasswordMatched) {
-    return res.status(401).json({ success: false, message: "Old password is incorrect." });
+    return res
+      .status(401)
+      .json({ success: false, message: "Old password is incorrect." });
   }
 
   company.password = await bcrypt.hash(newPassword, 10); // Hash the new password
   await company.save();
 
-  res.status(200).json({ success: true, message: "Password updated successfully." });
+  res
+    .status(200)
+    .json({ success: true, message: "Password updated successfully." });
 };
 
 module.exports = {
