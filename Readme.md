@@ -282,4 +282,4 @@ EMAIL_PASS=<your_email_password_or_app_specific_password>
 
 ## Conclusion
 This documentation provides the necessary information to interact with the Customer and Company APIs. Ensure you have set the appropriate environment variables and include the authorization token in the headers for protected endpoints.
-```
+
