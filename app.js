@@ -1,0 +1,47 @@
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
+const CompanyRoutes = require("./Routes/CompanyRoutes");
+const CustomerRoutes = require("./Routes/CustomerRoutes");
+
+// Load environment variables from .env file
+dotenv.config();
+
+const app = express();
+
+app.use(
+  cors({
+    origin: "*", // Your frontend's origin
+    credentials: true, // Allow credentials (cookies, headers)
+  })
+);
+// Middleware
+app.use(bodyParser.json());
+// Use cookie-parser middleware
+app.use(cookieParser());
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// MongoDB connection
+const MONGO_URI = process.env.MONGO_URI;
+mongoose
+  .connect(MONGO_URI)
+  .then(() => {
+    console.log("Connected to database.");
+  })
+  .catch((err) => {
+    console.log(`Some error occured while connecting to database: ${err}`);
+  });
+
+// Routes
+app.use("/api/company", CompanyRoutes);
+app.use("/api/customer", CustomerRoutes);
+
+// Server listening
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
