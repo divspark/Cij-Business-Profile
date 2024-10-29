@@ -34,14 +34,10 @@ const signup = async (req, res) => {
   // Check for missing required fields
   const missingFields = requiredFields.filter((field) => !req.body[field]);
   if (missingFields.length > 0) {
-    return res
-      .status(400)
-      .json({
-        success: false,
-        message: `Please fill all required details: ${missingFields.join(
-          ", "
-        )}`,
-      });
+    return res.status(400).json({
+      success: false,
+      message: `Please fill all required details: ${missingFields.join(", ")}`,
+    });
   }
 
   // Hash the password
@@ -56,13 +52,11 @@ const signup = async (req, res) => {
   // Generate a token
   const token = generateToken(company._id, company.Email);
 
-  res
-    .status(201)
-    .json({
-      success: true,
-      message: "Company registered successfully.",
-      token,
-    });
+  res.status(201).json({
+    success: true,
+    message: "Company registered successfully.",
+    token,
+  });
 };
 
 // Login API
@@ -119,6 +113,32 @@ const showProfile = async (req, res) => {
 // Update Profile API
 const updateProfile = async (req, res) => {
   const companyId = req.company.id;
+  const requiredFields = [
+    "CompanyName",
+    "ContactPersonName",
+    "PrimaryMobileNumber",
+    "Email",
+    "Pincode",
+    "District",
+    "Country",
+    "City",
+    "State",
+    "BuildingNumberOrFloor",
+    "GSTIN",
+    "PrimaryBusinessType",
+    "CEOName",
+    "GSTRegistrationDate",
+    "OwnershipType",
+  ];
+
+  // Check for missing required fields
+  const missingFields = requiredFields.filter((field) => !req.body[field]);
+  if (missingFields.length > 0) {
+    return res.status(400).json({
+      success: false,
+      message: `Please fill all required details: ${missingFields.join(", ")}`,
+    });
+  }
 
   const updatedCompany = await Company.findByIdAndUpdate(companyId, req.body, {
     new: true,
@@ -238,12 +258,10 @@ const updatePassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
 
   if (!oldPassword || !newPassword) {
-    return res
-      .status(400)
-      .json({
-        success: false,
-        message: "Old password and new password are required.",
-      });
+    return res.status(400).json({
+      success: false,
+      message: "Old password and new password are required.",
+    });
   }
 
   const company = await Company.findById(companyId);
