@@ -14,7 +14,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "*", // Your frontend's origin
+    origin: process.env.FRONTEND_URL, // Your frontend's origin
     credentials: true, // Allow credentials (cookies, headers)
   })
 );
