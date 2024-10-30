@@ -9,6 +9,7 @@ const {
   forgotPassword,
   resetPassword,
   updatePassword,
+  getAllCompanies
 } = require('../Controller/CompanyController');
 
 const authMiddleware = require('../middleware/CompanyAuth');
@@ -16,6 +17,7 @@ const authMiddleware = require('../middleware/CompanyAuth');
 // Apply middleware to the routes
 router.post('/signup', signup);
 router.post('/login', login);
+router.get('/all', getAllCompanies);
 router.get('/profile', authMiddleware, showProfile);
 router.put('/profile', authMiddleware, updateProfile);
 router.delete('/profile', authMiddleware, deleteProfile);

@@ -286,6 +286,31 @@ const updatePassword = async (req, res) => {
     .json({ success: true, message: "Password updated successfully." });
 };
 
+
+const getAllCompanies = async (req, res) => {
+  try {
+    const companies = await Company.find(); // Fetch all companies
+
+    if (!companies || companies.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No companies found." });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Companies fetched successfully.",
+      data: companies,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server error.",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   signup,
   login,
@@ -295,4 +320,5 @@ module.exports = {
   forgotPassword,
   resetPassword,
   updatePassword,
+  getAllCompanies
 };
