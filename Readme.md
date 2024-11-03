@@ -1,4 +1,3 @@
-```markdown
 # Connect India Japan API Documentation
 
 ## Overview
@@ -360,5 +359,3 @@ EMAIL_PASS=<your_email_password_or_app_specific_password>
     ]
   }
   ```
-
----
