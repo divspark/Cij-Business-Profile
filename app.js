@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const CompanyRoutes = require("./Routes/CompanyRoutes");
 const CustomerRoutes = require("./Routes/CustomerRoutes");
+const ProductRoutes = require("./Routes/ProductRoutes");
 
 // Load environment variables from .env file
 dotenv.config();
@@ -39,6 +40,7 @@ mongoose
 // Routes
 app.use("/api/company", CompanyRoutes);
 app.use("/api/customer", CustomerRoutes);
+app.use("/api/product", ProductRoutes);
 
 // Server listening
 const PORT = process.env.PORT || 8000;

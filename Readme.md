@@ -1,7 +1,8 @@
+```markdown
 # Connect India Japan API Documentation
 
 ## Overview
-This document provides an overview of the API endpoints for managing Customers and Companies, along with instructions on how to set up and start the project.
+This document provides an overview of the API endpoints for managing Customers, Companies, and Products, along with instructions on how to set up and start the project.
 
 ## Project Structure
 ```
@@ -12,18 +13,21 @@ This document provides an overview of the API endpoints for managing Customers a
 │
 ├── /controller          # Controllers for handling requests
 │   ├── CustomerController.js
-│   └── CompanyController.js
+│   ├── CompanyController.js
+│   └── ProductController.js
 │
 ├── /middleware          # Middleware functions
 │   └── auth.js         # Authentication middleware
 │
 ├── /model               # Mongoose models
 │   ├── CustomerSchema.js
-│   └── CompanySchema.js
+│   ├── CompanySchema.js
+│   └── ProductSchema.js
 │
 ├── /routes              # API route definitions
 │   ├── customerRoutes.js
-│   └── companyRoutes.js
+│   ├── companyRoutes.js
+│   └── productRoutes.js
 │
 ├── /utils               # Utility functions
 │   └── sendEmail.js     # Email sending functionality
@@ -116,7 +120,7 @@ EMAIL_PASS=<your_email_password_or_app_specific_password>
 ### 3. Get Customer Profile
 - **Endpoint:** `GET /customer/profile`
 - **Headers:**
-  ```
+  ```plaintext
   Authorization: Bearer your_jwt_token
   ```
 
@@ -142,7 +146,7 @@ EMAIL_PASS=<your_email_password_or_app_specific_password>
 ### 4. Update Customer Profile
 - **Endpoint:** `PUT /customer/update`
 - **Headers:**
-  ```
+  ```plaintext
   Authorization: Bearer your_jwt_token
   ```
 
@@ -225,7 +229,7 @@ EMAIL_PASS=<your_email_password_or_app_specific_password>
 ### 3. Get Company Profile
 - **Endpoint:** `GET /company/profile`
 - **Headers:**
-  ```
+  ```plaintext
   Authorization: Bearer your_jwt_token
   ```
 
@@ -258,7 +262,7 @@ EMAIL_PASS=<your_email_password_or_app_specific_password>
 ### 4. Update Company Profile
 - **Endpoint:** `PUT /company/update`
 - **Headers:**
-  ```
+  ```plaintext
   Authorization: Bearer your_jwt_token
   ```
 
@@ -280,6 +284,81 @@ EMAIL_PASS=<your_email_password_or_app_specific_password>
 
 ---
 
-## Conclusion
-This documentation provides the necessary information to interact with the Customer and Company APIs. Ensure you have set the appropriate environment variables and include the authorization token in the headers for protected endpoints.
+## Product APIs
 
+### 1. Create Product
+- **Endpoint:** `POST /product/create`
+- **Request Body:**
+  ```json
+  {
+    "ProductName": "Sample Product",
+    "CompanyId": "company_id_here",
+    "Description": "This is a sample product description.",
+    "Price": 100.00,
+    "Quantity": 50,
+    "Category": "Electronics"
+  }
+  ```
+
+- **Response:**
+  ```json
+  {
+    "success": true,
+    "message": "Product created successfully."
+  }
+  ```
+
+---
+
+### 2. Get Product Details by Product Name
+- **Endpoint:** `GET /product/details`
+- **Query Parameters:**
+  - `ProductName`: The name of the product.
+
+- **Response:**
+  ```json
+  {
+    "success": true,
+    "product": {
+      "ProductName": "Sample Product",
+      "Description": "This is a sample product description.",
+      "Price": 100.00,
+      "Quantity": 50,
+      "Category": "Electronics"
+    }
+  }
+  ```
+
+---
+
+### 3. Get All Products of a Company
+- **Endpoint:** `GET /product/company`
+- **Query Parameters:**
+  - `CompanyId`: The ID of the company.
+
+- **Response:**
+  ```json
+  {
+    "success": true,
+    "products": [
+      {
+        "ProductName": "Sample Product 1",
+        "Description": "Description of Sample Product 1",
+        "Price": 100.00,
+        "Quantity": 50,
+        "Category": "Electronics"
+      },
+      {
+        "ProductName": "Sample Product 2",
+        "Description": "Description of Sample Product 2",
+        "Price": 200.00,
+        "Quantity": 30,
+        "Category": "Home Appliances"
+     
+
+ }
+    ]
+  }
+  ```
+
+---
