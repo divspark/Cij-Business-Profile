@@ -3,7 +3,10 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
 const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
 const authMiddleware = require("../middleware/CompanyAuth"); // Adjust the path as necessary
+
+dotenv.config();
 
 // Create a JWT token
 const generateToken = (id, email) => {

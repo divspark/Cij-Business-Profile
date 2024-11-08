@@ -3,7 +3,10 @@ const Customer = require("../model/CustomerSchema");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
+const dotenv = require("dotenv");
 const jwt = require("jsonwebtoken");
+
+dotenv.config();
 
 // Create a JWT token
 const generateToken = (id, email) => {
