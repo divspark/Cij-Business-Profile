@@ -119,7 +119,7 @@ const forgotPassword = async (req, res) => {
   await customer.save();
 
   // Send email
-  const resetUrl = `${req.protocol}://${req.get("host")}/api/customer/reset-password/${resetToken}`;
+  const resetUrl = `${process.env.FRONTEND_URL}/api/customer/reset-password/${resetToken}`;
   const message = `You are receiving this email because you (or someone else) has requested to reset your password. Please make a PUT request to:\n\n ${resetUrl}`;
 
   await sendEmail({
