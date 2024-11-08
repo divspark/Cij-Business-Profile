@@ -12,6 +12,7 @@ const {
   updatePassword,
 } = require('../Controller/CustomerController');
 const customerAuthMiddleware = require('../middleware/customerAuth');
+const { sendInquiry,viewCustomerInquiries } = require('../Controller/InquiryController');
 
 // Define routes
 router.post('/signup', signup);
@@ -22,5 +23,7 @@ router.delete('/profile', customerAuthMiddleware, deleteProfile);
 router.post('/forgot-password', forgotPassword);
 router.put('/reset-password/:token', resetPassword);
 router.put('/update-password', customerAuthMiddleware, updatePassword);
+router.post('/send', customerAuthMiddleware, sendInquiry);
+router.get('/view', customerAuthMiddleware, viewCustomerInquiries)
 
 module.exports = router;

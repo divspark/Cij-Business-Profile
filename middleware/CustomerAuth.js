@@ -25,7 +25,8 @@ const customerAuthMiddleware = async (req, res, next) => {
     
     next(); // Call the next middleware or route handler
   } catch (error) {
-    return res.status(400).json({ success: false, message: 'Invalid token.' });
+    console.error('Token verification error:', error); // Log error for debugging
+    return res.status(403).json({ success: false, message: 'Invalid or expired token.' });
   }
 };
 

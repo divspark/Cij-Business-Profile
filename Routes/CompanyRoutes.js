@@ -11,6 +11,7 @@ const {
   updatePassword,
   getAllCompanies
 } = require('../Controller/CompanyController');
+const { viewAllInquiries } = require('../Controller/InquiryController');
 
 const authMiddleware = require('../middleware/CompanyAuth');
 
@@ -24,5 +25,6 @@ router.delete('/profile', authMiddleware, deleteProfile);
 router.post('/forgot-password', forgotPassword);
 router.put('/reset-password/:token', resetPassword);
 router.put('/update-password', authMiddleware, updatePassword);
+router.get('/view',authMiddleware, viewAllInquiries);
 
 module.exports = router;
