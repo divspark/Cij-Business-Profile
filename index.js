@@ -37,6 +37,10 @@ mongoose
     console.log(`Some error occured while connecting to database: ${err}`);
   });
 
+  app.get('/', (req, res) => {
+    res.send('Welcome to the API!');
+  });
+
 // Routes
 app.use("/api/company", CompanyRoutes);
 app.use("/api/customer", CustomerRoutes);

@@ -1,10 +1,10 @@
 {
   "name": "business_profile_backend_new",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
-    "dev": "nodemon app.js",
-    "start": "node app.js"
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
