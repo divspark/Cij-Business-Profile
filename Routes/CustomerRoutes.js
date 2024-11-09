@@ -11,7 +11,7 @@ const {
   resetPassword,
   updatePassword,
 } = require('../Controller/CustomerController');
-const customerAuthMiddleware = require('../middleware/customerAuth');
+const customerAuthMiddleware = require('../middleware/CustomerAuth');
 const { sendInquiry,viewCustomerInquiries } = require('../Controller/InquiryController');
 
 // Define routes
