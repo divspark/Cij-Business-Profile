@@ -15,7 +15,8 @@ const app = express();
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL, // Your frontend's origin
+    origin: '*', // Your frontend's origin
+    methods: ['GET', 'POST', 'PUT', 'DELETE','PATCH'],
     credentials: true, // Allow credentials (cookies, headers)
   })
 );
@@ -37,9 +38,9 @@ mongoose
     console.log(`Some error occured while connecting to database: ${err}`);
   });
 
-  app.get('/', (req, res) => {
+app.get('/', (req, res) => {
     res.send('Welcome to the API!');
-  });
+});
 
 // Routes
 app.use("/api/company", CompanyRoutes);
