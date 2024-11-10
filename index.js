@@ -13,9 +13,11 @@ dotenv.config();
 
 const app = express();
 
+const frontend_URL = process.env.FRONTEND_URL;
+
 app.use(
   cors({
-    origin: '*', // Your frontend's origin
+    origin: frontend_URL, // Your frontend's origin
     methods: ['GET', 'POST', 'PUT', 'DELETE','PATCH'],
     credentials: true, // Allow credentials (cookies, headers)
   })
